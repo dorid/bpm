@@ -1,4 +1,4 @@
-package vo;
+package constant;
 
 import org.dom4j.Element;
 
@@ -11,6 +11,7 @@ public class NodeType {
     public static final String TASK = "task";
     public static final String SCRIPT_TASK = "scriptTask";
     public static final String SEQUENCE = "sequenceFlow";
+    public static final String DECISION = "exclusiveGateway";
 
     public static boolean isTask(Element element) {
         if (NodeType.TASK.equals(element.getName()) ||
@@ -27,4 +28,11 @@ public class NodeType {
         }
         return false;
     }
+
+    public static boolean isDecision(Element element) {
+        if (NodeType.DECISION.equals(element.getName())
+                ) {
+            return true;
+        }
+        return false;    }
 }

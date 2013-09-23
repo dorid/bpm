@@ -6,19 +6,15 @@ package vo;
  * Time: 17:17
  */
 public class SequenceFlow {
+// ------------------------------ FIELDS ------------------------------
+
     private String name;
     private String id;
 
     private String sourceId;
     private String targetId;
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
+// --------------------- GETTER / SETTER METHODS ---------------------
 
     public String getId() {
         return id;
@@ -26,6 +22,14 @@ public class SequenceFlow {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getSourceId() {
@@ -42,5 +46,17 @@ public class SequenceFlow {
 
     public void setTargetId(String targetId) {
         this.targetId = targetId;
+    }
+
+// ------------------------ CANONICAL METHODS ------------------------
+
+    @Override
+    public String toString() {
+        return "SequenceFlow{" +
+                "name='" + name + '\'' +
+                ", id='" + id + '\'' +
+                ", sourceId='" + sourceId + '\'' +
+                ", targetId='" + targetId + '\'' +
+                '}';
     }
 }
