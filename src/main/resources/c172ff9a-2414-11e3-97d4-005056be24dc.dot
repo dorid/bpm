@@ -1,0 +1,79 @@
+  
+digraph process_diagram {
+  rankdir=LR;
+  splines=line;
+  overlap="0:";
+  /* sep="+25,25"; 
+  overlap=scalexy; 
+  nodesep=0.6; */
+  outputMode=nodesfirst;
+  node [
+    fixedsize=true, pin=true, fontsize=9, 
+    shape=box, style="filled", 
+    fillcolor="#fafad2", fontname="Monospace",
+    color="#333333", forcelabels="false"
+  ];
+  edge [
+    forcelabels="false"
+  ];
+
+  N1 [/* startEvent(id=_1) */shape="circle", style="filled", label="", fillcolor="#9acd32", width="0.5", height="0.5", pos="0.97916667,-1.71875!"];
+
+  N2 [/* terminateEvent(id=EndEvent_1) */shape="doublecircle", style="filled,bold", label="", fillcolor="#ff6347", width="0.5", height="0.5", pos="21.08333333,-1.71875!"];
+
+  N3 [/* SNX Human Task(id=Task_1) */label="User Approve", width="1.14583333", height="0.52083333", pos="12.86458333,-1.75!"];
+  _N3 [shape="circle", style="filled,rounded", color="none", fillcolor="none", fontcolor="#ffffff", fontsize="5", label=<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" CELLPADDING="0"><TR><TD><IMG SCALE="false" ></IMG></TD></TR></TABLE>>, width="0.09375", height="0.09375", pos="12.385416665,-1.583333335!"];
+  N4 [/* Http Callback(id=Task_2) */label="Start\nCallback", width="1.14583333", height="0.52083333", pos="5.05208333,-1.71875!"];
+  _N4 [shape="circle", style="filled,rounded", color="none", fillcolor="none", fontcolor="#ffffff", fontsize="5", label=<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" CELLPADDING="0"><TR><TD><IMG SCALE="false" ></IMG></TD></TR></TABLE>>, width="0.09375", height="0.09375", pos="4.572916665,-1.552083335!"];
+  N5 [/* Http Callback(id=Task_3) */label="Sales\nCallback", width="1.14583333", height="0.52083333", pos="16.61458333,-3.15625!"];
+  _N5 [shape="circle", style="filled,rounded", color="none", fillcolor="none", fontcolor="#ffffff", fontsize="5", label=<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" CELLPADDING="0"><TR><TD><IMG SCALE="false" ></IMG></TD></TR></TABLE>>, width="0.09375", height="0.09375", pos="16.135416665,-2.989583335!"];
+  N6 [/* exclusiveGateway(id=ExclusiveGateway_1) */shape="diamond", label="X", style="filled", fillcolor="#f0e68c", color="#a67f00", fontcolor="#a67f00", width="0.52083333", height="0.52083333", pos="6.61458333,-1.72916667!"];
+
+  N7 [/* Http Callback(id=Task_5) */label="Task Notify", width="1.14583333", height="0.52083333", pos="12.86458333,-0.48958333!"];
+  _N7 [shape="circle", style="filled,rounded", color="none", fillcolor="none", fontcolor="#ffffff", fontsize="5", label=<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" CELLPADDING="0"><TR><TD><IMG SCALE="false"></IMG></TD></TR></TABLE>>, width="0.09375", height="0.09375", pos="12.385416665,-0.322916665!"];
+  N8 [/* exclusiveGateway(id=ExclusiveGateway_2) */shape="diamond", label="X", style="filled", fillcolor="#f0e68c", color="#a67f00", fontcolor="#a67f00", width="0.52083333", height="0.52083333", pos="14.63541667,-1.71875!"];
+
+  N9 [/* Http Callback(id=Task_6) */label="Close\nCallback", width="1.14583333", height="0.52083333", pos="18.80208333,-1.71875!"];
+  _N9 [shape="circle", style="filled,rounded", color="none", fillcolor="none", fontcolor="#ffffff", fontsize="5", label=<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" CELLPADDING="0"><TR><TD><IMG SCALE="false"></IMG></TD></TR></TABLE>>, width="0.09375", height="0.09375", pos="18.322916665,-1.552083335!"];
+  N10 [/* exclusiveGateway(id=ExclusiveGateway_3) */shape="diamond", label="X", style="filled", fillcolor="#f0e68c", color="#a67f00", fontcolor="#a67f00", width="0.52083333", height="0.52083333", pos="16.61458333,-1.75!"];
+
+  N11 [/* exclusiveGateway(id=ExclusiveGateway_4) */shape="diamond", label="X", style="filled", fillcolor="#f0e68c", color="#a67f00", fontcolor="#a67f00", width="0.52083333", height="0.52083333", pos="14.63541667,-3.15625!"];
+
+  N12 [/* scriptTask(id=ScriptTask_1) */label="Init Flow Data", width="1.14583333", height="0.52083333", pos="2.86458333,-1.71875!"];
+  _N12 [shape="circle", style="filled,rounded", color="none", fillcolor="none", fontcolor="#ffffff", fontsize="5", label=<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" CELLPADDING="0"><TR><TD><IMG SCALE="false" ></IMG></TD></TR></TABLE>>, width="0.09375", height="0.09375", pos="2.385416665,-1.552083335!"];
+  N13 [/* SQL Node(id=Task_4) */label="Get User Ids", width="1.14583333", height="0.52083333", pos="8.28125,-1.72916667!"];
+  _N13 [shape="circle", style="filled,rounded", color="none", fillcolor="none", fontcolor="#ffffff", fontsize="5", label=<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" CELLPADDING="0"><TR><TD><IMG SCALE="false"></IMG></TD></TR></TABLE>>, width="0.09375", height="0.09375", pos="7.802083335,-1.562500005!"];
+  N14 [/* scriptTask(id=ScriptTask_2) */label="Init Task Data", width="1.14583333", height="0.52083333", pos="10.26041667,-0.48958333!"];
+  _N14 [shape="circle", style="filled,rounded", color="none", fillcolor="none", fontcolor="#ffffff", fontsize="5", label=<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" CELLPADDING="0"><TR><TD><IMG SCALE="false" ></IMG></TD></TR></TABLE>>, width="0.09375", height="0.09375", pos="9.781250005,-0.322916665!"];
+  N15 [/* Http Callback(id=Task_7) */label="Get Planner", width="1.14583333", height="0.52083333", pos="10.26041667,-1.71875!"];
+  _N15 [shape="circle", style="filled,rounded", color="none", fillcolor="none", fontcolor="#ffffff", fontsize="5", label=<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" CELLPADDING="0"><TR><TD><IMG SCALE="false"></IMG></TD></TR></TABLE>>, width="0.09375", height="0.09375", pos="9.781250005,-1.552083335!"];
+  N1 -> N12[fontcolor="#333333", fontsize="9", color="red", fillcolor="red", label=""];
+  N3 -> N8[fontcolor="#333333", fontsize="9", color="#333333", fillcolor="#333333", label=""];
+  N4 -> N6[fontcolor="#333333", fontsize="9", color="red", fillcolor="red", label=""];
+  N6 -> N13[fontcolor="#333333", fontsize="9", color="red", fillcolor="red", label="No"];
+  N7 -> N3[fontcolor="#333333", fontsize="9", color="red", fillcolor="red", label=""];
+  N6_N11_0[/* point(id=SequenceFlow_6) */shape="point", style="invis", width="0.001", height="0.001", pos="6.614583,-3.145833!"];
+  N6 -> N6_N11_0[arrowhead=none, arrowtail=none, color="#333333", fillcolor="#333333", fontcolor="#333333", fontsize="9", label="Yes"];
+  N6_N11_0 -> N11[fontcolor="#333333", fontsize="9", color="#333333", fillcolor="#333333", label=""];
+  N8 -> N11[fontcolor="#333333", fontsize="9", color="#333333", fillcolor="#333333", label="Approve"];
+  N9 -> N2[fontcolor="#333333", fontsize="9", color="#333333", fillcolor="#333333", label=""];
+  N8 -> N10[fontcolor="#333333", fontsize="9", color="#333333", fillcolor="#333333", label="Reject"];
+  N10 -> N9[fontcolor="#333333", fontsize="9", color="#333333", fillcolor="#333333", label=""];
+  N5 -> N10[fontcolor="#333333", fontsize="9", color="#333333", fillcolor="#333333", label=""];
+  N11 -> N5[fontcolor="#333333", fontsize="9", color="#333333", fillcolor="#333333", label=""];
+  N12 -> N4[fontcolor="#333333", fontsize="9", color="red", fillcolor="red", label=""];
+  N13 -> N15[fontcolor="#333333", fontsize="9", color="red", fillcolor="red", label=""];
+  N14 -> N7[fontcolor="#333333", fontsize="9", color="red", fillcolor="red", label=""];
+  N15 -> N14[fontcolor="#333333", fontsize="9", color="red", fillcolor="red", label=""];
+  _H_N6 [shape="box", style="dashed", label="", xlabel="1 - 0:00:00", color="gray", fontcolor="gray", fontsize="7", width="0.6875", height="0.6875", pos="6.61458333,-1.72916667!"];
+  _H_N14 [shape="box", style="dashed", label="", xlabel="1 - 0:00:00", color="gray", fontcolor="gray", fontsize="7", width="1.3125", height="0.6875", pos="10.26041667,-0.48958333!"];
+  _H_N12 [shape="box", style="dashed", label="", xlabel="1 - 0:00:00", color="gray", fontcolor="gray", fontsize="7", width="1.3125", height="0.6875", pos="2.86458333,-1.71875!"];
+  _H_N13 [shape="box", style="dashed", label="", xlabel="1 - 0:00:00", color="gray", fontcolor="gray", fontsize="7", width="1.3125", height="0.6875", pos="8.28125,-1.72916667!"];
+  _H_N7 [shape="box", style="dashed", label="", xlabel="1 - 0:00:01", color="gray", fontcolor="gray", fontsize="7", width="1.3125", height="0.6875", pos="12.86458333,-0.48958333!"];
+  _H_N1 [shape="box", style="dashed", label="", xlabel="1 - 0:00:00", color="gray", fontcolor="gray", fontsize="7", width="0.66666667", height="0.66666667", pos="0.97916667,-1.71875!"];
+  _H_N15 [shape="box", style="dashed", label="", xlabel="1 - 0:00:03", color="gray", fontcolor="gray", fontsize="7", width="1.3125", height="0.6875", pos="10.26041667,-1.71875!"];
+  _H_N3 [shape="box", style="", label="", xlabel="1 - 0:00:00", color="red", fontcolor="red", fontsize="7", width="1.3125", height="0.6875", pos="12.86458333,-1.75!"];
+  _H_N4 [shape="box", style="dashed", label="", xlabel="1 - 0:00:07", color="gray", fontcolor="gray", fontsize="7", width="1.3125", height="0.6875", pos="5.05208333,-1.71875!"];
+  
+}
+
