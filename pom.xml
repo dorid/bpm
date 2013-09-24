@@ -14,5 +14,12 @@
             <artifactId>dom4j</artifactId>
             <version>1.4</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.freemarker</groupId>
+            <artifactId>freemarker</artifactId>
+            <version>2.3.14</version>
+        </dependency>
+
     </dependencies>
 </project>

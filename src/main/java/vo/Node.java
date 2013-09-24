@@ -13,13 +13,14 @@ public class Node {
 
     private String name;
     private String id;
-    
-    private String x;
-    private String y;
-    private String weight;
+
+
+    private Point pos;
+    private String width;
     private String height;
     
     private String style;
+    private String shape;
 
     private List<Node> previous = new ArrayList<Node>();
     private List<Node> next = new ArrayList<Node>();
@@ -52,6 +53,14 @@ public class Node {
         this.name = name;
     }
 
+    public String getShape() {
+        return shape;
+    }
+
+    public void setShape(String shape) {
+        this.shape = shape;
+    }
+
     public List<Node> getPrevious() {
         return previous;
     }
@@ -77,9 +86,6 @@ public class Node {
         this.style = style;
     }
 
-    public String getWeight() {
-        return weight;
-    }
 
     public boolean isDraw() {
         return isDraw;
@@ -89,34 +95,49 @@ public class Node {
         isDraw = draw;
     }
 
-    public void setWeight(String weight) {
-        this.weight = weight;
+    public String getWidth() {
+        if ("diamond".equals(shape)) {
+            return "0.5";
+        }
+        if (name != null) {
+            return name.length() / 10.0 + "";
+        }
+        return "";
     }
 
-    public String getX() {
-        return x;
+    public void setWidth(String width) {
+        this.width = width;
     }
 
-    public void setX(String x) {
-        this.x = x;
+    public Point getPos() {
+        return pos;
     }
 
-    public String getY() {
-        return y;
-    }
-
-    public void setY(String y) {
-        this.y = y;
+    public void setPos(Point pos) {
+        this.pos = pos;
     }
 
 // ------------------------ CANONICAL METHODS ------------------------
 
     @Override
     public String toString() {
-        return "Node{" +
-                "name='" + name + '\'' +
-                ", id='" + id + '\'' +
+        StringBuffer sb = new StringBuffer();
+        sb.append(this.id);
+        sb.append("[");
+        String label = this.getName();
+        if (label != null && label.length() > 8) {
+//            label = label.substring(0, 8) + "\\n" + label.substring(8);
+        }
+        if ("diamond".equals(shape)) {
+            label = "X";
+        }
+        sb.append("label=\"" + label + "\",");
+        sb.append("width=\"" + this.getWidth() + "\",");
+        sb.append("shape=\"" + this.shape + "\",");
+        sb.append(pos.toString());
+        sb.append("]");
+        sb.append("\n");
 
-                '}';
+        return sb.toString();
     }
 }

@@ -28,11 +28,8 @@ public class DotUtil {
     public static String getDotForNode(Node node) {
         node.setDraw(true);
         StringBuffer sb = new StringBuffer();
-        String name = node.getName();
-        if (name == null) {
-            name = node.getId();
-        }
-        sb.append(node.getId() + "[label=\"" + name + "\"];\n");
+//        sb.append(node.getId() + "[,label=\"" + name + "\", width=\"" + node.getWidth() + "\"];\n");
+        sb.append(node);
         List<Node> next = node.getNext();
         for (Node nextNode : next) {
             sb.append(node.getId() + "->" + nextNode.getId() + ";\n");

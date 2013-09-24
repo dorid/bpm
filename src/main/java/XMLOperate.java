@@ -3,14 +3,13 @@ import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 import constant.NodeType;
-import vo.DecisionNode;
-import vo.Node;
-import vo.SequenceFlow;
-import vo.TaskNode;
+import vo.*;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class XMLOperate {
 // --------------------------- main() method ---------------------------
@@ -19,6 +18,11 @@ public class XMLOperate {
      * 解析XML数据
      */
     public static void main(String[] args) {
+        generateDot();
+//        operate.printSequence(sequenceFlows);
+    }
+
+    public static String generateDot() {
         List<Node> tasks = new ArrayList<Node>();
         List<SequenceFlow> sequenceFlows = new ArrayList<SequenceFlow>();
         String startFlowName = "";
@@ -35,6 +39,7 @@ public class XMLOperate {
         //指向根节点
         Element root = doc.getRootElement();
         List<Element> process = root.elements("process");
+        Map<String, Point> points = getPoints(root);
         for (Element node : process) {
             List<Element> elements = node.elements();
             for (Element element : elements) {
@@ -60,14 +65,51 @@ public class XMLOperate {
             }
         }
 
+        setNodePos(tasks, points);
         operate.arrange(tasks, sequenceFlows);
 
         SequenceFlow startFlow = operate.findFlowById(sequenceFlows, startFlowName);
 //        operate.printTask(tasks, startFlow.getTargetId(), 0);
         String dot = DotUtil.generateDot(tasks, startFlow.getTargetId());
-        System.out.println(dot);
-        System.out.println("=========================================");
-//        operate.printSequence(sequenceFlows);
+
+        return dot;
+    }
+
+    private static void setNodePos(List<Node> tasks, Map<String, Point> points) {
+        for (Node task : tasks) {
+            Point point = points.get(task.getId());
+            if (point != null) {
+                task.setPos(point);
+            }
+        }
+    }
+
+    private static Map<String, Point> getPoints(Element root) {
+
+        Map<String, Point> points = new HashMap<String, Point>();
+
+        Element bpmnDiagram = root.element("BPMNDiagram");
+        Element bpmnPlane = bpmnDiagram.element("BPMNPlane");
+
+        List<Element> elements = bpmnPlane.elements();
+        for (Element element : elements) {
+            if (element.getName().equals("BPMNShape")) {
+                String key = element.attributeValue("bpmnElement");
+
+                Element bounds = element.element("Bounds");
+                String x = bounds.attributeValue("x");
+                String y = "-" + bounds.attributeValue("y");
+
+
+                Point point = new Point();
+                point.setX(x);
+                point.setY(y);
+
+                points.put(key, point);
+            }
+
+        }
+        return points;
     }
 
     public TaskNode getTask(Element element) {
@@ -77,6 +119,7 @@ public class XMLOperate {
         TaskNode task = new TaskNode();
         task.setName(name);
         task.setId(id);
+        task.setShape("box");
 
         return task;
     }
@@ -103,20 +146,7 @@ public class XMLOperate {
         DecisionNode decisionNode = new DecisionNode();
         decisionNode.setId(id);
         decisionNode.setName(name);
-        decisionNode.setStyle("");
-
-/*        List<Element> elements = element.elements();
-        for (Element element1 : elements) {
-            Node node = new Node();
-            node.setId(element1.getText());
-            *//*if ("incoming".equals(element1.getName())) {
-                decisionNode.getPrevious().add(node);
-            }*//*
-            if ("outgoing".equals(element1.getName())) {
-                decisionNode.getNext().add(node);
-            }
-        }*/
-
+        decisionNode.setShape("diamond");
         return decisionNode;
     }
 
@@ -127,31 +157,6 @@ public class XMLOperate {
 
             if (sourceNode != null && targetNode != null) {
                 sourceNode.getNext().add(targetNode);
-                /*if (sourceNode instanceof TaskNode) {
-                    Node targetNode = findNodeById(tasks, flow.getTargetId());
-                    ((TaskNode) sourceNode).setNext(targetNode);
-                }
-                if (sourceNode instanceof DecisionNode) {
-                    List<Node> next = ((DecisionNode) sourceNode).getNext();
-                    List<Node> newNext = new ArrayList<Node>();
-                    for (Node node : next) {
-                        Node nodeById = null;
-
-                        SequenceFlow flowById = findFlowById(sequenceFlows, node.getId());
-                        if (flowById != null) {
-                            nodeById = findNodeById(tasks, flowById.getTargetId());
-                        } else {
-                            nodeById = findNodeById(tasks, flow.getTargetId());
-                        }
-
-                        if (nodeById != null) {
-                            newNext.add(nodeById);
-                        }
-
-                    }
-                    ((DecisionNode) sourceNode).getNext().clear();
-                    ((DecisionNode) sourceNode).getNext().addAll(newNext);
-                }*/
             }
         }
     }
