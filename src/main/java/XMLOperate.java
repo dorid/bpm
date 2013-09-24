@@ -21,6 +21,7 @@ public class XMLOperate {
     public static void main(String[] args) {
         List<Node> tasks = new ArrayList<Node>();
         List<SequenceFlow> sequenceFlows = new ArrayList<SequenceFlow>();
+        String startFlowName = "";
 
         XMLOperate operate = new XMLOperate();
         Document doc = null;
@@ -48,30 +49,25 @@ public class XMLOperate {
                 if (NodeType.isDecision(element)) {
                     tasks.add(operate.getDecision(element));
                 }
+
+                if (element.getName().equals("startEvent")) {
+                    List<Element> startList = element.elements();
+                    if (startList.size() > 0) {
+                        Element start = startList.get(0);
+                        startFlowName = start.getText();
+                    }
+                }
             }
-
-
-
-
-/*
-            System.out.println(order.element("customer").elementText("no"));
-            System.out.println(order.element("customer").elementText("name"));
-            List<Element> products = order.element("products").elements("product");
-            for (Element p : products) {
-                System.out.println("----" + p.elementText("name"));
-                System.out.println("----" + p.elementText("type"));
-                System.out.println("----" + p.elementText("quantity"));
-            }
-            System.out.println(order.element("address").elementText("address-start"));
-            System.out.println(order.element("address").elementText("address-end"));
-            System.out.println(order.elementTextTrim("date"));
-            System.out.println("");*/
         }
 
         operate.arrange(tasks, sequenceFlows);
-        operate.printTask(tasks);
+
+        SequenceFlow startFlow = operate.findFlowById(sequenceFlows, startFlowName);
+//        operate.printTask(tasks, startFlow.getTargetId(), 0);
+        String dot = DotUtil.generateDot(tasks, startFlow.getTargetId());
+        System.out.println(dot);
         System.out.println("=========================================");
-        operate.printSequence(sequenceFlows);
+//        operate.printSequence(sequenceFlows);
     }
 
     public TaskNode getTask(Element element) {
@@ -107,18 +103,19 @@ public class XMLOperate {
         DecisionNode decisionNode = new DecisionNode();
         decisionNode.setId(id);
         decisionNode.setName(name);
+        decisionNode.setStyle("");
 
-        List<Element> elements = element.elements();
+/*        List<Element> elements = element.elements();
         for (Element element1 : elements) {
             Node node = new Node();
             node.setId(element1.getText());
-            /*if ("incoming".equals(element1.getName())) {
+            *//*if ("incoming".equals(element1.getName())) {
                 decisionNode.getPrevious().add(node);
-            }*/
+            }*//*
             if ("outgoing".equals(element1.getName())) {
                 decisionNode.getNext().add(node);
             }
-        }
+        }*/
 
         return decisionNode;
     }
@@ -126,10 +123,11 @@ public class XMLOperate {
     private void arrange(List<Node> tasks, List<SequenceFlow> sequenceFlows) {
         for (SequenceFlow flow : sequenceFlows) {
             Node sourceNode = findNodeById(tasks, flow.getSourceId());
+            Node targetNode = findNodeById(tasks, flow.getTargetId());
 
-            if (sourceNode != null) {
-
-                if (sourceNode instanceof TaskNode) {
+            if (sourceNode != null && targetNode != null) {
+                sourceNode.getNext().add(targetNode);
+                /*if (sourceNode instanceof TaskNode) {
                     Node targetNode = findNodeById(tasks, flow.getTargetId());
                     ((TaskNode) sourceNode).setNext(targetNode);
                 }
@@ -137,18 +135,23 @@ public class XMLOperate {
                     List<Node> next = ((DecisionNode) sourceNode).getNext();
                     List<Node> newNext = new ArrayList<Node>();
                     for (Node node : next) {
+                        Node nodeById = null;
+
                         SequenceFlow flowById = findFlowById(sequenceFlows, node.getId());
                         if (flowById != null) {
-                            Node nodeById = findNodeById(tasks, flowById.getId());
-                            if (nodeById != null) {
-                                newNext.add(nodeById);
-                            }
-
+                            nodeById = findNodeById(tasks, flowById.getTargetId());
+                        } else {
+                            nodeById = findNodeById(tasks, flow.getTargetId());
                         }
+
+                        if (nodeById != null) {
+                            newNext.add(nodeById);
+                        }
+
                     }
                     ((DecisionNode) sourceNode).getNext().clear();
                     ((DecisionNode) sourceNode).getNext().addAll(newNext);
-                }
+                }*/
             }
         }
     }
@@ -171,9 +174,20 @@ public class XMLOperate {
         return null;
     }
 
-    public void printTask(List<Node> tasks) {
+    public void printTask(List<Node> tasks, String tastId, int level) {
+        int count = level;
         for (Node task : tasks) {
-            System.out.println(task);
+            if (task.getId().equals(tastId)) {
+                count = count + 1;
+                for (int i = 0; i < level; i++) {
+                    System.out.print("    ");
+                }
+                System.out.println(task);
+                List<Node> list = task.getNext();
+                for (Node node : list) {
+                    printTask(tasks, node.getId(), count);
+                }
+            }
         }
     }
 

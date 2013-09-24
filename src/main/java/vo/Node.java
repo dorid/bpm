@@ -1,5 +1,8 @@
 package vo;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * User: dori
  * Date: 13-9-23
@@ -17,6 +20,11 @@ public class Node {
     private String height;
     
     private String style;
+
+    private List<Node> previous = new ArrayList<Node>();
+    private List<Node> next = new ArrayList<Node>();
+
+    private boolean isDraw = false;
 
 // --------------------- GETTER / SETTER METHODS ---------------------
 
@@ -44,7 +52,24 @@ public class Node {
         this.name = name;
     }
 
+    public List<Node> getPrevious() {
+        return previous;
+    }
+
+    public void setPrevious(List<Node> previous) {
+        this.previous = previous;
+    }
+
+    public List<Node> getNext() {
+        return next;
+    }
+
+    public void setNext(List<Node> next) {
+        this.next = next;
+    }
+
     public String getStyle() {
+
         return style;
     }
 
@@ -54,6 +79,14 @@ public class Node {
 
     public String getWeight() {
         return weight;
+    }
+
+    public boolean isDraw() {
+        return isDraw;
+    }
+
+    public void setDraw(boolean draw) {
+        isDraw = draw;
     }
 
     public void setWeight(String weight) {
@@ -83,11 +116,7 @@ public class Node {
         return "Node{" +
                 "name='" + name + '\'' +
                 ", id='" + id + '\'' +
-                ", x='" + x + '\'' +
-                ", y='" + y + '\'' +
-                ", weight='" + weight + '\'' +
-                ", height='" + height + '\'' +
-                ", style='" + style + '\'' +
+
                 '}';
     }
 }
