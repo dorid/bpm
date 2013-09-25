@@ -1,7 +1,9 @@
 package vo;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * User: dori
@@ -18,18 +20,23 @@ public class Node {
     private Point pos;
     private String width;
     private String height;
-    
+
     private String style;
     private String shape;
 
     private List<Node> previous = new ArrayList<Node>();
     private List<Node> next = new ArrayList<Node>();
+    private Map<Node, String> lineLabel = new HashMap<Node, String>();
 
     private boolean isDraw = false;
+    private boolean isBlank = false;
 
 // --------------------- GETTER / SETTER METHODS ---------------------
 
     public String getHeight() {
+        if (height == null) {
+            return "0.5";
+        }
         return height;
     }
 
@@ -46,6 +53,9 @@ public class Node {
     }
 
     public String getName() {
+        if (name == null) {
+            name = "";
+        }
         return name;
     }
 
@@ -82,12 +92,29 @@ public class Node {
         return style;
     }
 
+    public Map<Node, String> getLineLabel() {
+        return lineLabel;
+    }
+
+    public void setLineLabel(Map<Node, String> lineLabel) {
+        this.lineLabel = lineLabel;
+    }
+
     public void setStyle(String style) {
         this.style = style;
     }
 
 
+    public boolean isBlank() {
+        return isBlank;
+    }
+
+    public void setBlank(boolean blank) {
+        isBlank = blank;
+    }
+
     public boolean isDraw() {
+
         return isDraw;
     }
 
@@ -102,7 +129,7 @@ public class Node {
         if (name != null) {
             return name.length() / 10.0 + "";
         }
-        return "";
+        return "0.01";
     }
 
     public void setWidth(String width) {
@@ -117,11 +144,40 @@ public class Node {
         this.pos = pos;
     }
 
+    public String getPosString() {
+        if ("diamond".equals(shape)) {
+            //TODO why -0.3? not understand
+            double x = ((new Float(pos.getX())) / 92) - 0.3;
+            Float y = new Float(pos.getY()) / 92;
+            return "pos=\"" + x + "," + y + "!\",";
+        }
+
+        return pos.toString();
+    }
+
 // ------------------------ CANONICAL METHODS ------------------------
+
+    public String drawWrap() {
+        StringBuffer sb = new StringBuffer();
+        sb.append(this.id + "_");
+        sb.append("[");
+        sb.append("label=\"\",");
+        sb.append("xlabel=\"tttttt\",");
+        sb.append("width=\"" + (new Float(this.getWidth()) + 0.2) + "\",");
+        sb.append("height=\"" + (new Float(this.getHeight()) + 0.2) + "\",");
+        sb.append("style=\"dotted\",");
+        sb.append(getPosString());
+        sb.append("]\n");
+
+        return sb.toString();
+    }
 
     @Override
     public String toString() {
         StringBuffer sb = new StringBuffer();
+        if (!isBlank()) {
+            sb.append(drawWrap());
+        }
         sb.append(this.id);
         sb.append("[");
         String label = this.getName();
@@ -133,8 +189,9 @@ public class Node {
         }
         sb.append("label=\"" + label + "\",");
         sb.append("width=\"" + this.getWidth() + "\",");
+        sb.append("height=\"" + this.getHeight() + "\",");
         sb.append("shape=\"" + this.shape + "\",");
-        sb.append(pos.toString());
+        sb.append(getPosString());
         sb.append("]");
         sb.append("\n");
 

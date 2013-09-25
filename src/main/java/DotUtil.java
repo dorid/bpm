@@ -32,7 +32,16 @@ public class DotUtil {
         sb.append(node);
         List<Node> next = node.getNext();
         for (Node nextNode : next) {
-            sb.append(node.getId() + "->" + nextNode.getId() + ";\n");
+            String dir = "forward";
+            if (nextNode.isBlank()) {
+                dir = "none";
+            }
+
+            String label = node.getLineLabel().get(nextNode);
+            if (label == null) {
+                label = "";
+            }
+            sb.append(node.getId() + "->" + nextNode.getId() + "[dir=\"" + dir +"\", label=\"" + label + "\"];\n");
         }
         return sb.toString();
     }

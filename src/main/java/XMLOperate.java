@@ -40,6 +40,7 @@ public class XMLOperate {
         Element root = doc.getRootElement();
         List<Element> process = root.elements("process");
         Map<String, Point> points = getPoints(root);
+        List<Node> blankNodes = getBlankNode(root);
         for (Element node : process) {
             List<Element> elements = node.elements();
             for (Element element : elements) {
@@ -65,14 +66,91 @@ public class XMLOperate {
             }
         }
 
+        //设置各节点的坐标
         setNodePos(tasks, points);
+        //把各节点连接起来
         operate.arrange(tasks, sequenceFlows);
+        //插入空节点
+        operate.insert(tasks, blankNodes);
 
         SequenceFlow startFlow = operate.findFlowById(sequenceFlows, startFlowName);
-//        operate.printTask(tasks, startFlow.getTargetId(), 0);
+        //根据起始节点，生成DOT文件
         String dot = DotUtil.generateDot(tasks, startFlow.getTargetId());
 
         return dot;
+    }
+
+    private void insert(List<Node> tasks, List<Node> newNodes) {
+        tasks.addAll(newNodes);
+        for (Node newNode : newNodes) {
+            Node previous = findNodeById(tasks, newNode.getPrevious().get(0).getId());
+            Node next = findNodeById(tasks, newNode.getNext().get(0).getId());
+
+            if (previous != null && next != null) {
+                previous.getNext().remove(next);
+                previous.getNext().add(newNode);
+
+                newNode.getNext().clear();
+                newNode.getPrevious().clear();
+                newNode.getNext().add(next);
+                newNode.getLineLabel().put(next, previous.getLineLabel().get(next));
+            }
+        }
+    }
+
+    private static List<Node> getBlankNode(Element root) {
+        List<Node> blankNodes = new ArrayList<Node>();
+
+        Element bpmnDiagram = root.element("BPMNDiagram");
+        Element bpmnPlane = bpmnDiagram.element("BPMNPlane");
+
+        List<Element> elements = bpmnPlane.elements();
+        for (Element element : elements) {
+            if (element.getName().equals("BPMNEdge")) {
+
+                String sourceElement = element.attributeValue("sourceElement");
+                sourceElement = sourceElement.substring(sourceElement.indexOf("_") + 1);
+
+                String targetElement = element.attributeValue("targetElement");
+                targetElement = targetElement.substring(targetElement.indexOf("_") + 1);
+
+                List<Element> points = element.elements();
+                if (points.size() > 2) {
+                    for (int i = 1; i < points.size() - 1; i++) {
+                        Element point = points.get(i);
+                        String x = point.attributeValue("x");
+                        String y = "-" + point.attributeValue("y");
+                        double xd = new Float(x) - 50;
+                        double yd = new Float(y) + 20;
+
+                        //point
+                        Point blankPoint = new Point();
+                        blankPoint.setX(xd + "");
+                        blankPoint.setY(yd + "");
+                        //previous
+                        Node previous = new Node();
+                        previous.setId(sourceElement);
+                        //next
+                        Node next = new Node();
+                        next.setId(targetElement);
+
+
+                        Node blankNode = new Node();
+                        blankNode.setId(sourceElement + "__" + targetElement);
+                        blankNode.setWidth("0.01");
+                        blankNode.setHeight("0.01");
+                        blankNode.setPos(blankPoint);
+                        blankNode.setBlank(true);
+
+                        blankNode.getPrevious().add(previous);
+                        blankNode.getNext().add(next);
+
+                        blankNodes.add(blankNode);
+                    }
+                }
+            }
+        }
+        return blankNodes;
     }
 
     private static void setNodePos(List<Node> tasks, Map<String, Point> points) {
@@ -157,6 +235,7 @@ public class XMLOperate {
 
             if (sourceNode != null && targetNode != null) {
                 sourceNode.getNext().add(targetNode);
+                sourceNode.getLineLabel().put(targetNode, flow.getName());
             }
         }
     }

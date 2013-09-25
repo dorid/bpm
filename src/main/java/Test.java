@@ -40,6 +40,6 @@ public class Test {
      //最后开始生成
      template.process(data, out);
 
-     Runtime.getRuntime().exec("dot test.dot -Tpng -o test.png -Kfdp");
+     Runtime.getRuntime().exec("D:\\graphviz-2.34\\release\\bin\\dot test.dot -Tpng -o test.png -Kfdp");
  }
 }  
