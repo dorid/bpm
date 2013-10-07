@@ -35,8 +35,10 @@ public class XMLOperate {
         } catch (DocumentException ex) {
             ex.printStackTrace();
         }
+
         //指向根节点
         Element root = doc.getRootElement();
+
         List<Element> process = root.elements("process");
         if (process != null && process.size() > 0) {
             List<Element> elements = process.get(0).elements();
@@ -61,6 +63,10 @@ public class XMLOperate {
         //设置各节点的坐标
         setNodePos(nodes, points);
         operate.printTask(nodes);
+
+        //取空白节点
+        List<Node> blankNodes = operate.getBlankNode(root, sequenceFlows);
+        nodes.addAll(blankNodes);
 /*
 
         //把各节点连接起来
@@ -79,7 +85,7 @@ public class XMLOperate {
 
 
 
-    private static List<Node> getBlankNode(Element root) {
+    private List<Node> getBlankNode(Element root, List<SequenceFlow> sequenceFlows) {
         List<Node> blankNodes = new ArrayList<Node>();
 
         Element bpmnDiagram = root.element("BPMNDiagram");
@@ -89,11 +95,8 @@ public class XMLOperate {
         for (Element element : elements) {
             if (element.getName().equals("BPMNEdge")) {
 
-                String sourceElement = element.attributeValue("sourceElement");
-                sourceElement = sourceElement.substring(sourceElement.indexOf("_") + 1);
-
-                String targetElement = element.attributeValue("targetElement");
-                targetElement = targetElement.substring(targetElement.indexOf("_") + 1);
+                String flowName = element.attributeValue("bpmnElement");
+                SequenceFlow flow = findFlowById(sequenceFlows, flowName);
 
                 List<Element> points = element.elements();
                 if (points.size() > 2) {
@@ -101,30 +104,33 @@ public class XMLOperate {
                         Element point = points.get(i);
                         String x = point.attributeValue("x");
                         String y = "-" + point.attributeValue("y");
-                        double xd = new Float(x) - 50;
-                        double yd = new Float(y) + 20;
 
                         //point
                         Point blankPoint = new Point();
-                        blankPoint.setX(xd + "");
-                        blankPoint.setY(yd + "");
-                        //previous
-                        Node previous = new Node();
-                        previous.setId(sourceElement);
-                        //next
-                        Node next = new Node();
-                        next.setId(targetElement);
+                        blankPoint.setX(x + "");
+                        blankPoint.setY(y + "");
+                        blankPoint.setH("0");
+                        blankPoint.setW("0");
 
-
-                        Node blankNode = new Node();
-                        blankNode.setId(sourceElement + "__" + targetElement);
-                        blankNode.setWidth("0.01");
-                        blankNode.setHeight("0.01");
+                        BlankNode blankNode = new BlankNode();
+                        blankNode.setId(flowName + "_" + i);
                         blankNode.setPos(blankPoint);
-                        blankNode.setBlank(true);
-
 
                         blankNodes.add(blankNode);
+
+                        SequenceFlow blankFlow = new SequenceFlow();
+                        sequenceFlows.add(blankFlow);
+                        blankFlow.setId(flowName + "_" + i);
+                        if (i == 1) {
+                            blankFlow.setTargetRef(flow.getTargetRef());
+                            blankFlow.setSourceRef(blankNode);
+                            flow.setTargetRef(blankNode);
+                        }else{
+                            flow = findFlowById(sequenceFlows, (flowName + "_" + (i-1)));
+                            blankFlow.setTargetRef(flow.getTargetRef());
+                            blankFlow.setSourceRef(blankNode);
+                            flow.setTargetRef(blankNode);
+                        }
                     }
                 }
             }
@@ -173,15 +179,7 @@ public class XMLOperate {
         return points;
     }
 
-    public TaskNode getTask(Element element) {
-        String name = element.attributeValue("name");
-        String id = element.attributeValue("id");
 
-        TaskNode task = new TaskNode();
-        task.setName(name);
-        task.setId(id);
-        return task;
-    }
 
     private SequenceFlow getSequence(Element element, List<Node> nodes) {
         String name = element.attributeValue("name");
@@ -200,28 +198,6 @@ public class XMLOperate {
 
         return sequenceFlow;
     }
-
-    private Node getDecision(Element element) {
-        String name = element.attributeValue("name");
-        String id = element.attributeValue("id");
-
-        DecisionNode decisionNode = new DecisionNode();
-        decisionNode.setId(id);
-        decisionNode.setName(name);
-        return decisionNode;
-    }
-
-/*    private void arrange(List<Node> tasks, List<SequenceFlow> sequenceFlows) {
-        for (SequenceFlow flow : sequenceFlows) {
-            Node sourceNode = findNodeById(tasks, flow.getSourceId());
-            Node targetNode = findNodeById(tasks, flow.getTargetId());
-
-            if (sourceNode != null && targetNode != null) {
-                sourceNode.getNext().add(targetNode);
-                sourceNode.getLineLabel().put(targetNode, flow.getName());
-            }
-        }
-    }*/
 
     private Node findNodeById(List<Node> tasks, String id) {
         if (id == null) {
@@ -250,9 +226,4 @@ public class XMLOperate {
         }
     }
 
-    public void printSequence(List<SequenceFlow> sequenceFlows) {
-        for (SequenceFlow sequenceFlow : sequenceFlows) {
-            System.out.println(sequenceFlow);
-        }
-    }
 }

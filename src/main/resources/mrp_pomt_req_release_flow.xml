@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.omg.org/bpmn20" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:drools="http://www.jboss.org/drools" id="_u_QZUC8sEeOnTrjVTfCw0A" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd" targetNamespace="http://www.omg.org/bpmn20">
-    <bpmn2:error id="_u_QZUi8sEeOnTrjVTfCw0A"/>
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.omg.org/bpmn20" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:drools="http://www.jboss.org/drools" id="_UbCPkC8zEeOnTrjVTfCw0A" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd" targetNamespace="http://www.omg.org/bpmn20">
+    <bpmn2:error id="_UbCPki8zEeOnTrjVTfCw0A"/>
     <bpmn2:process id="Dori.test" drools:packageName="Dori" name="test" isExecutable="true">
         <bpmn2:startEvent id="_D8FD241E-9ADB-4860-BA9A-D8D2D5C3373A" drools:bgcolor="#FFFFFF" drools:selectable="true" name="te">
             <bpmn2:outgoing>_166A3968-E83E-4894-BC39-B36CA31A03A2</bpmn2:outgoing>
-            <bpmn2:errorEventDefinition id="_u_QZUS8sEeOnTrjVTfCw0A" errorRef="_u_QZUi8sEeOnTrjVTfCw0A"/>
+            <bpmn2:errorEventDefinition id="_UbCPkS8zEeOnTrjVTfCw0A" errorRef="_UbCPki8zEeOnTrjVTfCw0A"/>
         </bpmn2:startEvent>
         <bpmn2:sequenceFlow id="_166A3968-E83E-4894-BC39-B36CA31A03A2" drools:bgcolor="#000000" drools:selectable="true" sourceRef="_D8FD241E-9ADB-4860-BA9A-D8D2D5C3373A" targetRef="_46D3E9FC-26F6-4E05-8F24-C67A9B03C6AD"/>
         <bpmn2:task id="_58C643E5-15E8-4051-BFEC-642D38BC5FD6" drools:selectable="true" name="">
@@ -21,30 +21,33 @@
             <bpmn2:outgoing>_6DDB9727-BE3D-401D-B73B-25EE402B22F8</bpmn2:outgoing>
         </bpmn2:parallelGateway>
     </bpmn2:process>
-    <bpmndi:BPMNDiagram id="_u_QZUy8sEeOnTrjVTfCw0A">
-        <bpmndi:BPMNPlane id="_u_QZVC8sEeOnTrjVTfCw0A" bpmnElement="Dori.test">
-            <bpmndi:BPMNShape id="_u_QZVS8sEeOnTrjVTfCw0A" bpmnElement="_D8FD241E-9ADB-4860-BA9A-D8D2D5C3373A">
+    <bpmndi:BPMNDiagram id="_UbCPky8zEeOnTrjVTfCw0A">
+        <bpmndi:BPMNPlane id="_UbC2oC8zEeOnTrjVTfCw0A" bpmnElement="Dori.test">
+            <bpmndi:BPMNShape id="_UbC2oS8zEeOnTrjVTfCw0A" bpmnElement="_D8FD241E-9ADB-4860-BA9A-D8D2D5C3373A">
                 <dc:Bounds height="30.0" width="30.0" x="135.0" y="180.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNEdge id="_u_QZVi8sEeOnTrjVTfCw0A" bpmnElement="_166A3968-E83E-4894-BC39-B36CA31A03A2">
+            <bpmndi:BPMNEdge id="_UbC2oi8zEeOnTrjVTfCw0A" bpmnElement="_166A3968-E83E-4894-BC39-B36CA31A03A2">
                 <di:waypoint xsi:type="dc:Point" x="150.0" y="195.0"/>
                 <di:waypoint xsi:type="dc:Point" x="230.0" y="195.0"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNShape id="_u_QZVy8sEeOnTrjVTfCw0A" bpmnElement="_58C643E5-15E8-4051-BFEC-642D38BC5FD6">
-                <dc:Bounds height="80.0" width="100.0" x="295.0" y="155.0"/>
+            <bpmndi:BPMNShape id="_UbC2oy8zEeOnTrjVTfCw0A" bpmnElement="_58C643E5-15E8-4051-BFEC-642D38BC5FD6">
+                <dc:Bounds height="80.0" width="100.0" x="295.0" y="195.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNEdge id="_u_RAYC8sEeOnTrjVTfCw0A" bpmnElement="_6DDB9727-BE3D-401D-B73B-25EE402B22F8">
+            <bpmndi:BPMNEdge id="_UbC2pC8zEeOnTrjVTfCw0A" bpmnElement="_6DDB9727-BE3D-401D-B73B-25EE402B22F8">
                 <di:waypoint xsi:type="dc:Point" x="230.0" y="195.0"/>
-                <di:waypoint xsi:type="dc:Point" x="345.0" y="195.0"/>
+                <di:waypoint xsi:type="dc:Point" x="230.0" y="235.0"/>
+                <di:waypoint xsi:type="dc:Point" x="345.0" y="235.0"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNShape id="_u_RAYS8sEeOnTrjVTfCw0A" bpmnElement="_20A04A6F-85F0-400B-97A2-DA9A8F95420B">
+            <bpmndi:BPMNShape id="_UbC2pS8zEeOnTrjVTfCw0A" bpmnElement="_20A04A6F-85F0-400B-97A2-DA9A8F95420B">
                 <dc:Bounds height="28.0" width="28.0" x="480.0" y="181.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNEdge id="_u_RAYi8sEeOnTrjVTfCw0A" bpmnElement="_5EE9D388-B982-416D-B03B-926314D8C7DF">
-                <di:waypoint xsi:type="dc:Point" x="345.0" y="195.0"/>
+            <bpmndi:BPMNEdge id="_UbC2pi8zEeOnTrjVTfCw0A" bpmnElement="_5EE9D388-B982-416D-B03B-926314D8C7DF">
+                <di:waypoint xsi:type="dc:Point" x="345.0" y="235.0"/>
+                <di:waypoint xsi:type="dc:Point" x="437.0" y="235.0"/>
+                <di:waypoint xsi:type="dc:Point" x="437.0" y="195.0"/>
                 <di:waypoint xsi:type="dc:Point" x="494.0" y="195.0"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNShape id="_u_RAYy8sEeOnTrjVTfCw0A" bpmnElement="_46D3E9FC-26F6-4E05-8F24-C67A9B03C6AD">
+            <bpmndi:BPMNShape id="_UbC2py8zEeOnTrjVTfCw0A" bpmnElement="_46D3E9FC-26F6-4E05-8F24-C67A9B03C6AD">
                 <dc:Bounds height="40.0" width="40.0" x="210.0" y="175.0"/>
             </bpmndi:BPMNShape>
         </bpmndi:BPMNPlane>
