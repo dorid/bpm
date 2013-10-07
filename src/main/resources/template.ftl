@@ -14,7 +14,7 @@ fillcolor="#fafad2", fontname="Monospace",
 color="#333333", forcelabels="false"
 ];
 edge [
-forcelabels="false"
+forcelabels="true"
 ];
 
 ${dot}

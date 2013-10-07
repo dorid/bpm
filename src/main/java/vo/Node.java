@@ -24,20 +24,28 @@ public class Node {
     private String style;
     private String shape;
 
-    private List<Node> previous = new ArrayList<Node>();
-    private List<Node> next = new ArrayList<Node>();
-    private Map<Node, String> lineLabel = new HashMap<Node, String>();
+
 
     private boolean isDraw = false;
     private boolean isBlank = false;
 
+    private String _getId() {
+        if (id == null) {
+            return null;
+        }
+        return id.replace("-", "_");
+    }
+
 // --------------------- GETTER / SETTER METHODS ---------------------
 
     public String getHeight() {
-        if (height == null) {
-            return "0.5";
+        Point point = getPos();
+        if (point != null) {
+            String h = point.getH();
+            return new Double(h)/72 + "";
         }
-        return height;
+
+        return "0";
     }
 
     public void setHeight(String height) {
@@ -56,6 +64,8 @@ public class Node {
         if (name == null) {
             name = "";
         }
+        if (name.length() > getWidth()) {
+        }
         return name;
     }
 
@@ -64,40 +74,14 @@ public class Node {
     }
 
     public String getShape() {
-        return shape;
+        return "box";
     }
 
-    public void setShape(String shape) {
-        this.shape = shape;
-    }
 
-    public List<Node> getPrevious() {
-        return previous;
-    }
-
-    public void setPrevious(List<Node> previous) {
-        this.previous = previous;
-    }
-
-    public List<Node> getNext() {
-        return next;
-    }
-
-    public void setNext(List<Node> next) {
-        this.next = next;
-    }
 
     public String getStyle() {
 
         return style;
-    }
-
-    public Map<Node, String> getLineLabel() {
-        return lineLabel;
-    }
-
-    public void setLineLabel(Map<Node, String> lineLabel) {
-        this.lineLabel = lineLabel;
     }
 
     public void setStyle(String style) {
@@ -122,14 +106,12 @@ public class Node {
         isDraw = draw;
     }
 
-    public String getWidth() {
-        if ("diamond".equals(shape)) {
-            return "0.5";
+    public Double getWidth() {
+        Point point = getPos();
+        if (point != null) {
+            return new Double(point.getW()) / 72;
         }
-        if (name != null) {
-            return name.length() / 10.0 + "";
-        }
-        return "0.01";
+        return 0.0;
     }
 
     public void setWidth(String width) {
@@ -145,10 +127,13 @@ public class Node {
     }
 
     public String getPosString() {
+        if (pos == null) {
+            return "";
+        }
         if ("diamond".equals(shape)) {
-            //TODO why -0.3? not understand
-            double x = ((new Float(pos.getX())) / 92) - 0.3;
-            Float y = new Float(pos.getY()) / 92;
+            double x = ((new Float(pos.getX())) / 72);
+            float y = new Float(pos.getY()) - new Float(pos.getH()) / 2;
+//            Float y = new Float(pos.getY()) / 72;
             return "pos=\"" + x + "," + y + "!\",";
         }
 
@@ -159,7 +144,7 @@ public class Node {
 
     public String drawWrap() {
         StringBuffer sb = new StringBuffer();
-        sb.append(this.id + "_");
+        sb.append(_getId() + "_");
         sb.append("[");
         sb.append("label=\"\",");
         sb.append("xlabel=\"tttttt\",");
@@ -172,29 +157,36 @@ public class Node {
         return sb.toString();
     }
 
-    @Override
-    public String toString() {
-        StringBuffer sb = new StringBuffer();
-        if (!isBlank()) {
-            sb.append(drawWrap());
-        }
-        sb.append(this.id);
-        sb.append("[");
+    public String getLabel() {
         String label = this.getName();
         if (label != null && label.length() > 8) {
 //            label = label.substring(0, 8) + "\\n" + label.substring(8);
         }
-        if ("diamond".equals(shape)) {
-            label = "X";
+        return label;
+    }
+
+    @Override
+    public String toString() {
+        StringBuffer sb = new StringBuffer();
+        if (!isBlank()) {
+            //sb.append(drawWrap());
         }
-        sb.append("label=\"" + label + "\",");
+        sb.append(_getId());
+        sb.append("[");
+
+        sb.append("label=\"" + getLabel() + "\",");
+        sb.append("xlabel=\"" + getXlabel() + "\",");
         sb.append("width=\"" + this.getWidth() + "\",");
         sb.append("height=\"" + this.getHeight() + "\",");
-        sb.append("shape=\"" + this.shape + "\",");
+        sb.append("shape=\"" + getShape() + "\",");
         sb.append(getPosString());
         sb.append("]");
         sb.append("\n");
 
         return sb.toString();
+    }
+
+    public String getXlabel() {
+        return "";
     }
 }

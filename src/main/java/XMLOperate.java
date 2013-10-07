@@ -2,7 +2,8 @@ import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
-import constant.NodeType;
+import util.DotUtil;
+import util.NodeUtil;
 import vo.*;
 
 import java.io.InputStream;
@@ -23,11 +24,9 @@ public class XMLOperate {
     }
 
     public static String generateDot() {
-        List<Node> tasks = new ArrayList<Node>();
-        List<SequenceFlow> sequenceFlows = new ArrayList<SequenceFlow>();
-        String startFlowName = "";
-
+        List<Node> nodes = new ArrayList<Node>();
         XMLOperate operate = new XMLOperate();
+        List<SequenceFlow> sequenceFlows = new ArrayList<SequenceFlow>();
         Document doc = null;
         try {
             SAXReader reader = new SAXReader();
@@ -39,64 +38,46 @@ public class XMLOperate {
         //指向根节点
         Element root = doc.getRootElement();
         List<Element> process = root.elements("process");
-        Map<String, Point> points = getPoints(root);
-        List<Node> blankNodes = getBlankNode(root);
-        for (Element node : process) {
-            List<Element> elements = node.elements();
+        if (process != null && process.size() > 0) {
+            List<Element> elements = process.get(0).elements();
+            //解析点
             for (Element element : elements) {
-                if (NodeType.isTask(element)) {
-                    tasks.add(operate.getTask(element));
-                }
-
-                if (NodeType.isSequence(element)) {
-                    sequenceFlows.add(operate.getSequence(element));
-                }
-
-                if (NodeType.isDecision(element)) {
-                    tasks.add(operate.getDecision(element));
-                }
-
-                if (element.getName().equals("startEvent")) {
-                    List<Element> startList = element.elements();
-                    if (startList.size() > 0) {
-                        Element start = startList.get(0);
-                        startFlowName = start.getText();
-                    }
+                Node node = NodeUtil.parse(element);
+                if (node != null) {
+                    nodes.add(node);
                 }
             }
+            //线
+            for (Element element : elements) {
+                if (element.getName().equals("sequenceFlow")) {
+                    sequenceFlows.add(operate.getSequence(element, nodes));
+                }
+            }
+
         }
+        Map<String, Point> points = getPoints(root);
+
 
         //设置各节点的坐标
-        setNodePos(tasks, points);
+        setNodePos(nodes, points);
+        operate.printTask(nodes);
+/*
+
         //把各节点连接起来
-        operate.arrange(tasks, sequenceFlows);
+        operate.arrange(nodes, sequenceFlows);
         //插入空节点
-        operate.insert(tasks, blankNodes);
+        operate.insert(nodes, blankNodes);
 
         SequenceFlow startFlow = operate.findFlowById(sequenceFlows, startFlowName);
         //根据起始节点，生成DOT文件
-        String dot = DotUtil.generateDot(tasks, startFlow.getTargetId());
+        */
+
+        String dot = DotUtil.generateDot(nodes, sequenceFlows);
 
         return dot;
     }
 
-    private void insert(List<Node> tasks, List<Node> newNodes) {
-        tasks.addAll(newNodes);
-        for (Node newNode : newNodes) {
-            Node previous = findNodeById(tasks, newNode.getPrevious().get(0).getId());
-            Node next = findNodeById(tasks, newNode.getNext().get(0).getId());
 
-            if (previous != null && next != null) {
-                previous.getNext().remove(next);
-                previous.getNext().add(newNode);
-
-                newNode.getNext().clear();
-                newNode.getPrevious().clear();
-                newNode.getNext().add(next);
-                newNode.getLineLabel().put(next, previous.getLineLabel().get(next));
-            }
-        }
-    }
 
     private static List<Node> getBlankNode(Element root) {
         List<Node> blankNodes = new ArrayList<Node>();
@@ -142,8 +123,6 @@ public class XMLOperate {
                         blankNode.setPos(blankPoint);
                         blankNode.setBlank(true);
 
-                        blankNode.getPrevious().add(previous);
-                        blankNode.getNext().add(next);
 
                         blankNodes.add(blankNode);
                     }
@@ -177,11 +156,15 @@ public class XMLOperate {
                 Element bounds = element.element("Bounds");
                 String x = bounds.attributeValue("x");
                 String y = "-" + bounds.attributeValue("y");
+                String w = bounds.attributeValue("width");
+                String h = bounds.attributeValue("height");
 
 
                 Point point = new Point();
                 point.setX(x);
                 point.setY(y);
+                point.setW(w);
+                point.setH(h);
 
                 points.put(key, point);
             }
@@ -197,12 +180,10 @@ public class XMLOperate {
         TaskNode task = new TaskNode();
         task.setName(name);
         task.setId(id);
-        task.setShape("box");
-
         return task;
     }
 
-    private SequenceFlow getSequence(Element element) {
+    private SequenceFlow getSequence(Element element, List<Node> nodes) {
         String name = element.attributeValue("name");
         String id = element.attributeValue("id");
         String sourceRef = element.attributeValue("sourceRef");
@@ -211,8 +192,11 @@ public class XMLOperate {
         SequenceFlow sequenceFlow = new SequenceFlow();
         sequenceFlow.setId(id);
         sequenceFlow.setName(name);
-        sequenceFlow.setSourceId(sourceRef);
-        sequenceFlow.setTargetId(targetRef);
+        Node source = findNodeById(nodes, sourceRef);
+        sequenceFlow.setSourceRef(source);
+
+        Node target = findNodeById(nodes, targetRef);
+        sequenceFlow.setTargetRef(target);
 
         return sequenceFlow;
     }
@@ -224,11 +208,10 @@ public class XMLOperate {
         DecisionNode decisionNode = new DecisionNode();
         decisionNode.setId(id);
         decisionNode.setName(name);
-        decisionNode.setShape("diamond");
         return decisionNode;
     }
 
-    private void arrange(List<Node> tasks, List<SequenceFlow> sequenceFlows) {
+/*    private void arrange(List<Node> tasks, List<SequenceFlow> sequenceFlows) {
         for (SequenceFlow flow : sequenceFlows) {
             Node sourceNode = findNodeById(tasks, flow.getSourceId());
             Node targetNode = findNodeById(tasks, flow.getTargetId());
@@ -238,9 +221,12 @@ public class XMLOperate {
                 sourceNode.getLineLabel().put(targetNode, flow.getName());
             }
         }
-    }
+    }*/
 
     private Node findNodeById(List<Node> tasks, String id) {
+        if (id == null) {
+            return null;
+        }
         for (Node task : tasks) {
             if (id.equals(task.getId())) {
                 return task;
@@ -258,20 +244,9 @@ public class XMLOperate {
         return null;
     }
 
-    public void printTask(List<Node> tasks, String tastId, int level) {
-        int count = level;
+    public void printTask(List<Node> tasks) {
         for (Node task : tasks) {
-            if (task.getId().equals(tastId)) {
-                count = count + 1;
-                for (int i = 0; i < level; i++) {
-                    System.out.print("    ");
-                }
-                System.out.println(task);
-                List<Node> list = task.getNext();
-                for (Node node : list) {
-                    printTask(tasks, node.getId(), count);
-                }
-            }
+            System.out.println(task);
         }
     }
 

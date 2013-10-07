@@ -11,8 +11,8 @@ public class SequenceFlow {
     private String name;
     private String id;
 
-    private String sourceId;
-    private String targetId;
+    private Node sourceRef;
+    private Node targetRef;
 
 // --------------------- GETTER / SETTER METHODS ---------------------
 
@@ -25,38 +25,40 @@ public class SequenceFlow {
     }
 
     public String getName() {
-        return name;
+        if (name != null) {
+            return name;
+        }
+        return "";
     }
 
     public void setName(String name) {
         this.name = name;
     }
 
-    public String getSourceId() {
-        return sourceId;
+    public Node getSourceRef() {
+        return sourceRef;
     }
 
-    public void setSourceId(String sourceId) {
-        this.sourceId = sourceId;
+    public void setSourceRef(Node sourceRef) {
+        this.sourceRef = sourceRef;
     }
 
-    public String getTargetId() {
-        return targetId;
+    public Node getTargetRef() {
+        return targetRef;
     }
 
-    public void setTargetId(String targetId) {
-        this.targetId = targetId;
+    public void setTargetRef(Node targetRef) {
+        this.targetRef = targetRef;
     }
-
-// ------------------------ CANONICAL METHODS ------------------------
 
     @Override
     public String toString() {
-        return "SequenceFlow{" +
-                "name='" + name + '\'' +
-                ", id='" + id + '\'' +
-                ", sourceId='" + sourceId + '\'' +
-                ", targetId='" + targetId + '\'' +
-                '}';
+        StringBuffer sb = new StringBuffer();
+        sb.append(sourceRef.getId().replace("-", "_") + "->" + targetRef.getId().replace("-", "_"));
+        sb.append("[");
+        sb.append("label=\"" + getName() + "\"");
+        sb.append("]");
+        sb.append("\n");
+        return sb.toString();
     }
 }
