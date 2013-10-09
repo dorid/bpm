@@ -6,10 +6,18 @@ package vo;
  * Time: 17:17
  */
 public class SequenceFlow {
+    public String getDir() {
+        return dir;
+    }
+
+    public void setDir(String dir) {
+        this.dir = dir;
+    }
 // ------------------------------ FIELDS ------------------------------
 
     private String name;
     private String id;
+    private String dir = "forward";
 
     private Node sourceRef;
     private Node targetRef;
@@ -56,7 +64,8 @@ public class SequenceFlow {
         StringBuffer sb = new StringBuffer();
         sb.append(sourceRef.getId().replace("-", "_") + "->" + targetRef.getId().replace("-", "_"));
         sb.append("[");
-        sb.append("label=\"" + getName() + "\"");
+        sb.append("label=\"" + getName() + "\",");
+        sb.append("dir=\"" + getDir() + "\"");
         sb.append("]");
         sb.append("\n");
         return sb.toString();

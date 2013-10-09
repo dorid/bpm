@@ -125,8 +125,10 @@ public class XMLOperate {
                             blankFlow.setTargetRef(flow.getTargetRef());
                             blankFlow.setSourceRef(blankNode);
                             flow.setTargetRef(blankNode);
+                            flow.setDir("none");
                         }else{
                             flow = findFlowById(sequenceFlows, (flowName + "_" + (i-1)));
+                            flow.setDir("none");
                             blankFlow.setTargetRef(flow.getTargetRef());
                             blankFlow.setSourceRef(blankNode);
                             flow.setTargetRef(blankNode);
