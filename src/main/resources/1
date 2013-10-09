@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.omg.org/bpmn20" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:drools="http://www.jboss.org/drools" id="_grLKYDDGEeOnTrjVTfCw0A" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd" targetNamespace="http://www.omg.org/bpmn20">
+  <bpmn2:process id="Dori.test" drools:packageName="Dori" name="test" isExecutable="true">
+    <bpmn2:task id="_58C643E5-15E8-4051-BFEC-642D38BC5FD6" drools:selectable="true" name="">
+      <bpmn2:incoming>_75010656-E4B4-41FC-A624-CEB586E7F5F1</bpmn2:incoming>
+      <bpmn2:outgoing>_B172652A-C242-44E6-B12A-01D512250C68</bpmn2:outgoing>
+    </bpmn2:task>
+    <bpmn2:subProcess id="_760DA599-9779-4AC0-AEAE-78AAEDA5AAE2" drools:selectable="true" name="">
+      <bpmn2:incoming>_B172652A-C242-44E6-B12A-01D512250C68</bpmn2:incoming>
+      <bpmn2:startEvent id="_B8D2F96E-899B-4718-AFB5-6E18781CE03A" drools:bgcolor="#9acd32" drools:selectable="true" name=""/>
+    </bpmn2:subProcess>
+    <bpmn2:startEvent id="_AAEA19AB-8ED1-45D7-AA90-E467D0D4D5AD" drools:bgcolor="#FFFFFF" drools:selectable="true" name="te">
+      <bpmn2:outgoing>_75010656-E4B4-41FC-A624-CEB586E7F5F1</bpmn2:outgoing>
+    </bpmn2:startEvent>
+    <bpmn2:sequenceFlow id="_B172652A-C242-44E6-B12A-01D512250C68" drools:bgcolor="#000000" drools:selectable="true" sourceRef="_58C643E5-15E8-4051-BFEC-642D38BC5FD6" targetRef="_760DA599-9779-4AC0-AEAE-78AAEDA5AAE2"/>
+    <bpmn2:sequenceFlow id="_75010656-E4B4-41FC-A624-CEB586E7F5F1" drools:bgcolor="#000000" drools:selectable="true" sourceRef="_AAEA19AB-8ED1-45D7-AA90-E467D0D4D5AD" targetRef="_58C643E5-15E8-4051-BFEC-642D38BC5FD6"/>
+  </bpmn2:process>
+  <bpmndi:BPMNDiagram id="_grLKYTDGEeOnTrjVTfCw0A">
+    <bpmndi:BPMNPlane id="_grLKYjDGEeOnTrjVTfCw0A" bpmnElement="Dori.test">
+      <bpmndi:BPMNShape id="_grLKYzDGEeOnTrjVTfCw0A" bpmnElement="_58C643E5-15E8-4051-BFEC-642D38BC5FD6">
+        <dc:Bounds height="80.0" width="100.0" x="420.0" y="255.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_grLKZDDGEeOnTrjVTfCw0A" bpmnElement="_760DA599-9779-4AC0-AEAE-78AAEDA5AAE2">
+        <dc:Bounds height="206.0" width="196.0" x="555.0" y="245.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_grLKZTDGEeOnTrjVTfCw0A" bpmnElement="_B8D2F96E-899B-4718-AFB5-6E18781CE03A">
+        <dc:Bounds height="30.0" width="30.0" x="33.0" y="36.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_grLKZjDGEeOnTrjVTfCw0A" bpmnElement="_AAEA19AB-8ED1-45D7-AA90-E467D0D4D5AD">
+        <dc:Bounds height="30.0" width="30.0" x="135.0" y="180.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="_grLKZzDGEeOnTrjVTfCw0A" bpmnElement="_B172652A-C242-44E6-B12A-01D512250C68">
+        <di:waypoint xsi:type="dc:Point" x="470.0" y="295.0"/>
+        <di:waypoint xsi:type="dc:Point" x="470.0" y="348.0"/>
+        <di:waypoint xsi:type="dc:Point" x="653.0" y="348.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_grLKaDDGEeOnTrjVTfCw0A" bpmnElement="_75010656-E4B4-41FC-A624-CEB586E7F5F1">
+        <di:waypoint xsi:type="dc:Point" x="150.0" y="195.0"/>
+        <di:waypoint xsi:type="dc:Point" x="292.0" y="195.0"/>
+        <di:waypoint xsi:type="dc:Point" x="292.0" y="295.0"/>
+        <di:waypoint xsi:type="dc:Point" x="470.0" y="295.0"/>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn2:definitions>
