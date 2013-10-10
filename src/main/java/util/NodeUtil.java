@@ -1,6 +1,7 @@
 package util;
 
 import constant.NodeType;
+import newp.XMLOperate;
 import org.dom4j.Element;
 import vo.Node;
 import vo.SequenceFlow;
@@ -70,7 +71,7 @@ public class NodeUtil {
         XMLOperate operate = new XMLOperate();
         for (Element nodeEletemnt : elements) {
             if (nodeEletemnt.getName().equals("sequenceFlow")) {
-                sequenceFlows.add(operate.getSequence(nodeEletemnt, nodes));
+//                sequenceFlows.add(operate.getSequence(nodeEletemnt, nodes));
             }
         }
 

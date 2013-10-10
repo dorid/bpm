@@ -4,7 +4,10 @@ import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
-import vo.*;
+import vo.BlankNode;
+import vo.Node;
+import vo.Point;
+import vo.SequenceFlow;
 
 import java.io.InputStream;
 import java.util.ArrayList;

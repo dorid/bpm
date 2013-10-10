@@ -2,7 +2,7 @@ import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.Template;
 import freemarker.template.TemplateExceptionHandler;
-import util.XMLOperate;
+import newp.XMLOperate;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -30,7 +30,7 @@ public class Test {
 
      //定义并设置数据
      Map<String, String> data = new HashMap<String, String>();
-     data.put("dot", XMLOperate.generateDot());
+//     data.put("dot", XMLOperate.generateDot());
 
      //获取指定模板文件
      Template template = cfg.getTemplate("template.ftl");
