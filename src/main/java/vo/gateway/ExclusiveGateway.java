@@ -20,6 +20,6 @@ public class ExclusiveGateway extends Node {
 
     @Override
     public String getLabel() {
-        return "";
+        return "X";
     }
 }

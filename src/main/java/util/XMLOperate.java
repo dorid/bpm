@@ -1,9 +1,9 @@
+package util;
+
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
-import util.DotUtil;
-import util.NodeUtil;
 import vo.*;
 
 import java.io.InputStream;
@@ -30,7 +30,8 @@ public class XMLOperate {
         Document doc = null;
         try {
             SAXReader reader = new SAXReader();
-            InputStream in = XMLOperate.class.getResourceAsStream("mrp_pomt_req_release_flow.xml");
+            InputStream in = XMLOperate.class.getClassLoader().getResourceAsStream("mrp_pomt_req_release_flow.xml");
+
             doc = reader.read(in);
         } catch (DocumentException ex) {
             ex.printStackTrace();
@@ -44,7 +45,7 @@ public class XMLOperate {
             List<Element> elements = process.get(0).elements();
             //解析点
             for (Element element : elements) {
-                Node node = NodeUtil.parse(element);
+                Node node = NodeUtil.parse(element, nodes, sequenceFlows);
                 if (node != null) {
                     nodes.add(node);
                 }
@@ -62,27 +63,16 @@ public class XMLOperate {
 
         //设置各节点的坐标
         setNodePos(nodes, points);
-        operate.printTask(nodes);
+//        operate.printTask(nodes);
 
         //取空白节点
         List<Node> blankNodes = operate.getBlankNode(root, sequenceFlows);
         nodes.addAll(blankNodes);
-/*
-
-        //把各节点连接起来
-        operate.arrange(nodes, sequenceFlows);
-        //插入空节点
-        operate.insert(nodes, blankNodes);
-
-        SequenceFlow startFlow = operate.findFlowById(sequenceFlows, startFlowName);
-        //根据起始节点，生成DOT文件
-        */
 
         String dot = DotUtil.generateDot(nodes, sequenceFlows);
 
         return dot;
     }
-
 
 
     private List<Node> getBlankNode(Element root, List<SequenceFlow> sequenceFlows) {
@@ -119,15 +109,16 @@ public class XMLOperate {
                         blankNodes.add(blankNode);
 
                         SequenceFlow blankFlow = new SequenceFlow();
-                        sequenceFlows.add(blankFlow);
                         blankFlow.setId(flowName + "_" + i);
+                        sequenceFlows.add(blankFlow);
+
                         if (i == 1) {
                             blankFlow.setTargetRef(flow.getTargetRef());
                             blankFlow.setSourceRef(blankNode);
                             flow.setTargetRef(blankNode);
                             flow.setDir("none");
-                        }else{
-                            flow = findFlowById(sequenceFlows, (flowName + "_" + (i-1)));
+                        } else {
+                            flow = findFlowById(sequenceFlows, (flowName + "_" + (i - 1)));
                             flow.setDir("none");
                             blankFlow.setTargetRef(flow.getTargetRef());
                             blankFlow.setSourceRef(blankNode);
@@ -142,7 +133,18 @@ public class XMLOperate {
 
     private static void setNodePos(List<Node> tasks, Map<String, Point> points) {
         for (Node task : tasks) {
+            Node parent = task.getParent();
+
             Point point = points.get(task.getId());
+            if (parent != null) {
+                Point parentPoint = points.get(parent.getId());
+                float x = new Float(point.getX()) + new Float(parentPoint.getX());
+                float y = new Float(point.getY()) + new Float(parentPoint.getY());
+
+                point.setX(x + "");
+                point.setY(y + "");
+            }
+
             if (point != null) {
                 task.setPos(point);
             }
@@ -182,8 +184,7 @@ public class XMLOperate {
     }
 
 
-
-    private SequenceFlow getSequence(Element element, List<Node> nodes) {
+    public SequenceFlow getSequence(Element element, List<Node> nodes) {
         String name = element.attributeValue("name");
         String id = element.attributeValue("id");
         String sourceRef = element.attributeValue("sourceRef");

@@ -2,6 +2,7 @@ import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.Template;
 import freemarker.template.TemplateExceptionHandler;
+import util.XMLOperate;
 
 import java.io.File;
 import java.io.FileOutputStream;

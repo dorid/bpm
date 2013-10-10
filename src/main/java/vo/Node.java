@@ -16,12 +16,16 @@ public class Node {
     private String name;
     private String id;
 
+    private Node parent;
 
     private Point pos;
     private String width;
     private String height;
+    private String bgColor;
+    private String fillColor;
+    private String borderColor;
 
-    private String style;
+    private String style = "";
     private String shape;
 
 
@@ -38,6 +42,14 @@ public class Node {
 
 // --------------------- GETTER / SETTER METHODS ---------------------
 
+    public Node getParent() {
+        return parent;
+    }
+
+    public void setParent(Node parent) {
+        this.parent = parent;
+    }
+
     public String getHeight() {
         Point point = getPos();
         if (point != null) {
@@ -46,6 +58,7 @@ public class Node {
         }
 
         return "0";
+
     }
 
     public void setHeight(String height) {
@@ -56,12 +69,32 @@ public class Node {
         return id;
     }
 
+    public String getFillColor() {
+        if (fillColor != null) {
+            return "fillcolor=\"" + fillColor + "\",";
+        }
+        return "";
+    }
+
+    public void setFillColor(String fillColor) {
+        this.fillColor = fillColor;
+    }
+
     public void setId(String id) {
         this.id = id;
     }
 
+    public String getBgColor() {
+        return bgColor;
+    }
+
+    public void setBgColor(String bgColor) {
+        this.bgColor = bgColor;
+    }
+
     public String getName() {
         if (name == null) {
+
             name = "";
         }
         if (name.length() > getWidth()) {
@@ -80,8 +113,10 @@ public class Node {
 
 
     public String getStyle() {
-
-        return style;
+        if (style != null && !style.equals("")) {
+            return "style=\"" + style + "\",";
+        }
+        return "";
     }
 
     public void setStyle(String style) {
@@ -165,6 +200,21 @@ public class Node {
         return label;
     }
 
+    public String getBorderColor() {
+        if (borderColor != null) {
+            return "color=\"" + borderColor + "\",";
+        }
+        return "";
+    }
+
+    public void setBorderColor(String borderColor) {
+        this.borderColor = borderColor;
+    }
+
+    public String getInnerNode() {
+        return "";
+    }
+
     @Override
     public String toString() {
         StringBuffer sb = new StringBuffer();
@@ -179,8 +229,13 @@ public class Node {
         sb.append("width=\"" + this.getWidth() + "\",");
         sb.append("height=\"" + this.getHeight() + "\",");
         sb.append("shape=\"" + getShape() + "\",");
+        sb.append(getStyle());
+//        sb.append("bgcolor=\"" + getBgColor() + "\",");
+        sb.append(getFillColor());
+        sb.append(getBorderColor());
         sb.append(getPosString());
         sb.append("]");
+        sb.append(getInnerNode());
         sb.append("\n");
 
         return sb.toString();
