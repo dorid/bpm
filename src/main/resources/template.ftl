@@ -1,4 +1,4 @@
-
+<#assign findNode= "newp.FindNodeMethod"?new()>
 digraph process_diagram {
 rankdir=LR;
 splines=line;
@@ -17,6 +17,22 @@ edge [
 forcelabels="true"
 ];
 
-${dot}
-}
+<#macro paint currentNode nodeList index>
+N_${index}[label="${node.name}"]
+    <#list currentNode.childList as child>
+        <#if child.nodeName=='outgoing'>
+            <#assign nextLine = findNode(nodeList, "id", child.value)>
+            <#assign nextNode = findNode(nodeList, "targetRef", nextLine.value)>
+        </#if>
+    </#list>
+    <@paint currentNode=currentNode nodeList=nodeList index=index></@paint>
+</#macro>
 
+
+<#list nodeList as currentNode>
+    <#if currentNode.nodeName == 'startEvent'>
+        <@paint currentNode=currentNode nodeList=nodeList index=currentNode_index></@paint>
+    </#if>
+</#list>
+
+}

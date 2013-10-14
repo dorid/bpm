@@ -1,5 +1,6 @@
 package newp;
 
+import freemarker.template.*;
 import org.dom4j.Attribute;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -9,7 +10,7 @@ import util.DotUtil;
 import util.NodeUtil;
 import vo.*;
 
-import java.io.InputStream;
+import java.io.*;
 import java.util.*;
 
 public class XMLOperate {
@@ -18,15 +19,41 @@ public class XMLOperate {
     /**
      * 解析XML数据
      */
-    public static void main(String[] args) {
-        generateDot();
-//        operate.printSequence(sequenceFlows);
+    public static void main(String[] args) throws IOException, TemplateException {
+        Map<String, Object> rootMap = new HashMap<String, Object>();
+        List<Map<String, Object>> mapList = generateDot();
+        rootMap.put("nodeList", mapList);
+
+
+        //模板路径
+        String dir = XMLOperate.class.getClass().getResource("/").getPath();
+
+        Configuration cfg = new Configuration();
+
+        //加载freemarker模板文件
+        cfg.setDirectoryForTemplateLoading(new File(dir));
+
+        //设置对象包装器
+        cfg.setObjectWrapper(new DefaultObjectWrapper());
+
+        //设计异常处理器
+        cfg.setTemplateExceptionHandler(TemplateExceptionHandler.IGNORE_HANDLER);
+
+
+        //获取指定模板文件
+        Template template = cfg.getTemplate("template.ftl");
+
+        //定义输入文件，默认生成在工程根目录
+        Writer out = new OutputStreamWriter(new FileOutputStream("test.dot"));
+
+        //最后开始生成
+        template.process(rootMap, out);
+
+        Runtime.getRuntime().exec("D:\\graphviz-2.34\\release\\bin\\dot test.dot -Tpng -o test.png -Kfdp");
     }
 
-    public static void generateDot() {
-        XMLOperate operate = new XMLOperate();
+    public static List<Map<String, Object>> generateDot() {
         List<Map<String, Object>> nodes = new ArrayList<Map<String, Object>>();
-        List<SequenceFlow> sequenceFlows = new ArrayList<SequenceFlow>();
         Document doc = null;
         try {
             SAXReader reader = new SAXReader();
@@ -39,12 +66,25 @@ public class XMLOperate {
 
         //指向根节点
         Element root = doc.getRootElement();
-
+        List<Element> elementList = new ArrayList<Element>();
         List<Element> process = root.elements("process");
-        if (process != null && process.size() > 0) {
-            List<Element> elements = process.get(0).elements();
+        for (Element proces : process) {
+            elementList.addAll(proces.elements());
+        }
+
+
+
+        Element bpmnDiagram = root.element("BPMNDiagram");
+        if (bpmnDiagram != null) {
+            Element bpmnPlane = bpmnDiagram.element("BPMNPlane");
+            if (bpmnPlane != null) {
+                elementList.addAll(bpmnPlane.elements());
+            }
+        }
+
+        if (elementList != null) {
             //解析点
-            for (Element element : elements) {
+            for (Element element : elementList) {
                 Map<String, Object> node = elementToMap(element);
                 nodes.add(node);
             }
@@ -53,6 +93,8 @@ public class XMLOperate {
         for (Map<String, Object> node : nodes) {
             System.out.println(node);
         }
+
+        return nodes;
     }
 
 

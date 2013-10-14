@@ -44,6 +44,7 @@ public class XMLOperate {
         Element root = doc.getRootElement();
 
         List<Element> process = root.elements("process");
+
         if (process != null && process.size() > 0) {
             List<Element> elements = process.get(0).elements();
             //解析点
